@@ -85,6 +85,7 @@ class UserController extends Controller
         return response()->json($user);
     }
 
+
     // Supprimer un utilisateur (Delete)
     public function destroy(User $user)
     {
