@@ -8,18 +8,80 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
+/**
+ * @OA\Schema(
+ *   schema="User",
+ *   type="object",
+ *   required={"name", "email"},
+ *   @OA\Property(
+ *     property="id",
+ *     type="integer",
+ *     format="int64",
+ *     description="User ID"
+ *   ),
+ *   @OA\Property(
+ *     property="name",
+ *     type="string",
+ *     description="User's name"
+ *   ),
+ *   @OA\Property(
+ *     property="email",
+ *     type="string",
+ *     format="email",
+ *     description="User's email"
+ *   ),
+ *   @OA\Property(
+ *     property="roles",
+ *     type="array",
+ *     @OA\Items(type="string"),
+ *     description="User's roles"
+ *   )
+ * )
+ */
+
+
+
 class UserController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth'); // Assurez-vous que l'utilisateur est authentifié
-        // Vous pourriez également ajouter une vérification de rôle spécifique ici si toutes les méthodes nécessitent un rôle admin
+        $this->middleware('auth');
     }
 
-    // Créer un nouvel utilisateur (Create)
+    /**
+     * @OA\Post(
+     *     path="/api/users",
+     *     summary="Create a new user",
+     *     tags={"Users"},
+     *     security={{ "apiAuth": {} }},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"name", "email", "password", "role"},
+     *             @OA\Property(property="name", type="string"),
+     *             @OA\Property(property="email", type="string", format="email"),
+     *             @OA\Property(property="password", type="string", format="password"),
+     *             @OA\Property(property="role", type="string")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="User created successfully",
+     *         @OA\JsonContent(ref="#/components/schemas/User")
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="Unauthorized"
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Bad Request"
+     *     )
+     * )
+     */
     public function store(Request $request)
     {
-        // Vérifier si l'utilisateur connecté est un admin
+
         if (!auth()->user()->hasRole('admin')) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
@@ -48,7 +110,27 @@ class UserController extends Controller
         return response()->json($user, 201);
     }
 
-    // Lister tous les utilisateurs (Read)
+    /**
+     * @OA\Get(
+     *     path="/api/users",
+     *     summary="List all users",
+     *     tags={"Users"},
+     *     security={{ "apiAuth": {} }},
+     *     @OA\Response(
+     *         response=200,
+     *         description="A list of users",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(ref="#/components/schemas/User")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="Unauthorized"
+     *     )
+     * )
+     */
+
     public function index()
     {
         if (!auth()->user()->hasRole('admin')) {
@@ -59,7 +141,44 @@ class UserController extends Controller
         return response()->json($users);
     }
 
-    // Mettre à jour un utilisateur (Update)
+    /**
+     * @OA\Put(
+     *     path="/api/users/{user}",
+     *     summary="Update an existing user",
+     *     tags={"Users"},
+     *     security={{ "apiAuth": {} }},
+     *     @OA\Parameter(
+     *         name="user",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="name", type="string"),
+     *             @OA\Property(property="email", type="string", format="email"),
+     *             @OA\Property(property="password", type="string", format="password"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="User updated successfully",
+     *         @OA\JsonContent(ref="#/components/schemas/User")
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="Unauthorized"
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Bad Request"
+     *     )
+     * )
+     */
+
     public function update(Request $request, User $user)
     {
         if (!auth()->user()->hasRole('admin')) {
@@ -85,8 +204,31 @@ class UserController extends Controller
         return response()->json($user);
     }
 
+    /**
+     * @OA\Delete(
+     *     path="/api/users/{user}",
+     *     summary="Delete a user",
+     *     tags={"Users"},
+     *     security={{ "apiAuth": {} }},
+     *     @OA\Parameter(
+     *         name="user",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="User deleted successfully"
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="Unauthorized"
+     *     )
+     * )
+     */
 
-    // Supprimer un utilisateur (Delete)
     public function destroy(User $user)
     {
         if (!auth()->user()->hasRole('admin')) {
@@ -97,4 +239,18 @@ class UserController extends Controller
 
         return response()->json(['message' => 'User deleted successfully']);
     }
+
+
+    public function assignRole(Request $request, User $user)
+    {
+        $request->validate([
+            'role' => 'required|string|exists:roles,name',
+        ]);
+
+        $role = Role::where('name', $request->role)->firstOrFail();
+        $user->roles()->sync([$role->id]);
+
+        return response()->json(['message' => 'Role assigned successfully']);
+    }
+
 }
