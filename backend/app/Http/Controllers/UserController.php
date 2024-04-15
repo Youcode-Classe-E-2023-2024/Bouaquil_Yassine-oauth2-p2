@@ -133,6 +133,7 @@ class UserController extends Controller
 
     public function index()
     {
+
         if (!auth()->user()->hasRole('admin')) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
@@ -228,6 +229,10 @@ class UserController extends Controller
  *     )
  * )
  */
+
+
+
+
 
     public function destroy(User $user)
     {
