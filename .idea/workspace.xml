@@ -5,8 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4e393439-f826-4a66-8051-bcd5a783f484" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/php-test-framework.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/app/Http/Controllers/UserController.php" beforeDir="false" afterPath="$PROJECT_DIR$/backend/app/Http/Controllers/UserController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.vscode/launch.json" beforeDir="false" afterPath="$PROJECT_DIR$/.vscode/launch.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/.phpunit.result.cache" beforeDir="false" afterPath="$PROJECT_DIR$/backend/.phpunit.result.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/database/seeders/RolesTableSeeder.php" beforeDir="false" afterPath="$PROJECT_DIR$/backend/database/seeders/RolesTableSeeder.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/js/login.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/js/login.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -323,7 +327,7 @@
       <method v="2" />
     </configuration>
     <configuration name="phpunit.xml" type="PHPUnitRunConfigurationType" factoryName="PHPUnit">
-      <TestRunner scope="XML" />
+      <TestRunner configuration_file="$PROJECT_DIR$/backend/phpunit.xml" scope="XML" />
       <method v="2" />
     </configuration>
   </component>
@@ -338,7 +342,10 @@
       <workItem from="1712184786461" duration="6617000" />
       <workItem from="1712943291907" duration="1914000" />
       <workItem from="1713168248218" duration="1135000" />
-      <workItem from="1713178663155" duration="2716000" />
+      <workItem from="1713178663155" duration="2738000" />
+      <workItem from="1713274313681" duration="107000" />
+      <workItem from="1713280766842" duration="2965000" />
+      <workItem from="1713315054584" duration="1171000" />
     </task>
     <servers />
   </component>
